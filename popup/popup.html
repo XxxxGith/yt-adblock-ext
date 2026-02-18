@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YT Ad Cleaner</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">▶</div>
+      <h1>YT Ad Cleaner</h1>
+    </header>
+
+    <!-- Inactive state: show activation form -->
+    <div id="view-activate" class="view">
+      <p class="subtitle">Enter your license key to activate.</p>
+      <div class="input-group">
+        <input type="text" id="license-input" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" spellcheck="false" autocomplete="off">
+        <button id="btn-activate" class="btn btn-primary">Activate</button>
+      </div>
+      <p id="error-msg" class="error hidden"></p>
+      <a href="https://your-store.lemonsqueezy.com" target="_blank" class="buy-link">Don't have a key? Buy license →</a>
+    </div>
+
+    <!-- Active state: show status -->
+    <div id="view-active" class="view hidden">
+      <div class="status-card">
+        <div class="status-badge active">● Active</div>
+        <div class="status-info">
+          <div class="info-row">
+            <span class="label">Email</span>
+            <span id="info-email" class="value">—</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Expires</span>
+            <span id="info-expiry" class="value">—</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Key</span>
+            <span id="info-key" class="value mono">—</span>
+          </div>
+        </div>
+      </div>
+      <button id="btn-deactivate" class="btn btn-secondary">Deactivate</button>
+    </div>
+
+    <footer>
+      <span>v1.0.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

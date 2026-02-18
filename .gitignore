@@ -1,0 +1,6 @@
+*.crx
+*.pem
+*.zip
+node_modules/
+.DS_Store
+icons/generate.html

@@ -1,0 +1,62 @@
+/* YT Ad Cleaner - CSS Layer (instant hide before JS loads) */
+/* Use high-specificity selectors to override YouTube's Polymer styles */
+
+.ytp-ad-overlay-container,
+.ytp-ad-text-overlay,
+.ytp-ad-player-overlay,
+.ytp-ad-player-overlay-layout,
+.ytp-ad-player-overlay-layout__player-card-container,
+.ytp-ad-image-overlay,
+.ytp-ad-overlay-slot,
+.ytp-ad-module,
+.ytp-ad-action-interstitial,
+.ytp-ad-overlay-ad-info-button-container,
+.ytp-paid-content-overlay,
+.ytp-ad-badge,
+.ytp-ad-badge__text--clean-player,
+.ytp-suggested-action,
+ytd-ad-slot-renderer,
+ad-slot-renderer,
+ytd-banner-promo-renderer,
+ytd-statement-banner-renderer,
+ytd-in-feed-ad-layout-renderer,
+ytd-promoted-sparkles-web-renderer,
+ytd-display-ad-renderer,
+ytd-promoted-video-renderer,
+ytd-action-companion-ad-renderer,
+ytd-compact-promoted-video-renderer,
+ytd-companion-slot-renderer,
+#companion,
+ytd-player-legacy-desktop-watch-ads-renderer,
+#player-ads,
+#masthead-ad,
+tp-yt-paper-dialog:has(yt-mealbar-promo-renderer),
+tp-yt-paper-dialog:has(.ytd-enforcement-message-view-model),
+.ytd-mealbar-promo-renderer,
+#panels > ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -9999 !important;
+}
+
+/* Extra specificity for Polymer custom elements */
+html ytd-companion-slot-renderer,
+html ytd-player-legacy-desktop-watch-ads-renderer,
+html ytd-ad-slot-renderer,
+html #player-ads > *,
+html #companion > *,
+body ytd-companion-slot-renderer,
+body ytd-player-legacy-desktop-watch-ads-renderer,
+body ytd-ad-slot-renderer {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+}
