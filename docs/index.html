@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YT Ad Cleaner - Clean YouTube Experience</title>
+  <meta name="description" content="Remove all YouTube ads instantly. Video ads, overlay ads, sidebar ads, and Premium popups - all gone.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      line-height: 1.6;
+    }
+
+    /* Nav */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+    }
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #ff0033, #cc0029);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta {
+      background: linear-gradient(135deg, #ff0033, #cc0029);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .nav-cta:hover { opacity: 0.9; }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 20px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(255,0,51,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: rgba(255,0,51,0.1);
+      border: 1px solid rgba(255,0,51,0.2);
+      border-radius: 20px;
+      font-size: 13px;
+      color: #ff3355;
+      margin-bottom: 30px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+      max-width: 800px;
+    }
+    .hero h1 span { color: #ff0033; }
+    .hero p {
+      font-size: 18px;
+      color: #888;
+      max-width: 500px;
+      margin-bottom: 40px;
+    }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff0033, #cc0029);
+      color: #fff;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,0,51,0.3); }
+    .btn-secondary {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #ccc;
+    }
+    .btn-secondary:hover { border-color: #555; color: #fff; }
+
+    /* Features */
+    .features {
+      padding: 100px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 60px;
+      letter-spacing: -1px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 32px;
+      transition: border-color 0.3s;
+    }
+    .feature-card:hover { border-color: #333; }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,0,51,0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    /* Pricing */
+    .pricing {
+      padding: 100px 60px;
+      text-align: center;
+    }
+    .pricing h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+    .pricing > p {
+      color: #777;
+      margin-bottom: 50px;
+      font-size: 16px;
+    }
+    .pricing-cards {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .pricing-card {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 40px 36px;
+      flex: 1;
+      min-width: 280px;
+      max-width: 360px;
+      text-align: left;
+    }
+    .pricing-card.popular {
+      border-color: #ff0033;
+      position: relative;
+    }
+    .pricing-card.popular::before {
+      content: 'Best Value';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff0033;
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .pricing-card h3 { font-size: 20px; margin-bottom: 6px; }
+    .pricing-card .price {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      margin: 16px 0;
+    }
+    .pricing-card .price span {
+      font-size: 16px;
+      font-weight: 400;
+      color: #666;
+      letter-spacing: 0;
+    }
+    .pricing-card ul {
+      list-style: none;
+      margin: 24px 0;
+    }
+    .pricing-card li {
+      padding: 8px 0;
+      font-size: 14px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pricing-card li::before {
+      content: '✓';
+      color: #22c55e;
+      font-weight: 700;
+    }
+    .pricing-card .btn { width: 100%; justify-content: center; margin-top: 10px; }
+
+    /* How it works */
+    .how {
+      padding: 100px 60px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .how h2 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 60px;
+      letter-spacing: -1px;
+    }
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .step {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    .step-num {
+      min-width: 48px;
+      height: 48px;
+      background: rgba(255,0,51,0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ff0033;
+    }
+    .step h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .step p { font-size: 14px; color: #777; }
+
+    /* FAQ */
+    .faq {
+      padding: 100px 60px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .faq h2 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 50px;
+      letter-spacing: -1px;
+    }
+    .faq-item {
+      border-bottom: 1px solid #1a1a1a;
+      padding: 20px 0;
+    }
+    .faq-item h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .faq-item p {
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 60px;
+      border-top: 1px solid #1a1a1a;
+      text-align: center;
+      font-size: 13px;
+      color: #444;
+    }
+    footer a { color: #666; text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .features, .pricing, .how, .faq { padding: 60px 20px; }
+      .hero { padding: 100px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">▶</div>
+      YT Ad Cleaner
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a href="#pricing" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">Chrome Extension</div>
+    <h1>YouTube without <span>ads</span>.</h1>
+    <p>Remove all YouTube ads instantly — video ads, overlays, sidebar promos, and Premium popups. Clean viewing, zero distractions.</p>
+    <div class="hero-buttons">
+      <a href="#pricing" class="btn btn-primary">Get YT Ad Cleaner</a>
+      <a href="https://github.com/XxxxGith/yt-adblock-ext" target="_blank" class="btn btn-secondary">View on GitHub</a>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <h2>Everything blocked</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⏭</div>
+        <h3>Video Ads</h3>
+        <p>Pre-roll, mid-roll, and post-roll video ads are automatically skipped or fast-forwarded to completion.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧹</div>
+        <h3>Overlay Ads</h3>
+        <p>Banner overlays and sponsored cards on the video player are removed instantly before you even see them.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📺</div>
+        <h3>Sidebar Ads</h3>
+        <p>Companion ads, promoted videos, and sponsored content in the sidebar — all hidden.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔇</div>
+        <h3>Premium Popups</h3>
+        <p>"Try YouTube Premium" nag dialogs are auto-dismissed. No more interruptions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Real-time Detection</h3>
+        <p>MutationObserver + polling ensures new ads are caught immediately, even on single-page navigation.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Privacy First</h3>
+        <p>No data collection. No tracking. Runs entirely in your browser. Open source on GitHub.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <h2>Simple pricing</h2>
+    <p>One-time purchase or subscribe. Cancel anytime.</p>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <h3>Monthly</h3>
+        <div class="price">$3.99 <span>/mo</span></div>
+        <ul>
+          <li>All ad types blocked</li>
+          <li>Real-time detection</li>
+          <li>Up to 3 devices</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="#" class="btn btn-secondary" id="buy-monthly">Subscribe Monthly</a>
+      </div>
+      <div class="pricing-card popular">
+        <h3>Yearly</h3>
+        <div class="price">$29.99 <span>/yr</span></div>
+        <ul>
+          <li>All ad types blocked</li>
+          <li>Real-time detection</li>
+          <li>Up to 3 devices</li>
+          <li>Save 37% vs monthly</li>
+        </ul>
+        <a href="#" class="btn btn-primary" id="buy-yearly">Subscribe Yearly</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Subscribe</h3>
+          <p>Choose a plan above. You'll receive a license key via email immediately after payment.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Install Extension</h3>
+          <p>Download the extension from <a href="https://github.com/XxxxGith/yt-adblock-ext/releases" style="color:#ff0033">GitHub Releases</a>. Unzip and load it in Chrome via <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;font-size:13px">chrome://extensions</code> with Developer Mode enabled.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Activate</h3>
+          <p>Click the extension icon, paste your license key, and hit Activate. That's it — ads are gone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <h2>FAQ</h2>
+    <div class="faq-item">
+      <h3>Why not just use a free ad blocker?</h3>
+      <p>YouTube actively detects and blocks traditional ad blockers like uBlock Origin. YT Ad Cleaner uses a different approach that works reliably with the latest YouTube changes.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How many devices can I use?</h3>
+      <p>Each license key can be activated on up to 3 devices. You can deactivate a device anytime to free up a slot.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What happens if I cancel?</h3>
+      <p>Your license remains active until the end of the billing period. After that, the extension will stop blocking ads until you resubscribe.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is my data safe?</h3>
+      <p>We collect zero data. The extension runs entirely in your browser. License validation only sends your key to LemonSqueezy's API — no browsing data, no analytics.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does it work on other browsers?</h3>
+      <p>Currently Chrome only. Firefox and Edge support coming soon.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>YT Ad Cleaner &copy; 2026 &nbsp;·&nbsp; <a href="https://github.com/XxxxGith/yt-adblock-ext">GitHub</a> &nbsp;·&nbsp; <a href="mailto:support@example.com">Support</a></p>
+  </footer>
+
+</body>
+</html>
